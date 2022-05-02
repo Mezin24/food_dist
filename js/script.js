@@ -211,10 +211,51 @@ window.addEventListener('DOMContentLoaded', () => {
 
   ///////// FORMS ///////////////////////
 
+  // const forms = document.querySelectorAll('form');
+  // const message = {
+  //   loading: 'Загрузка...',
+  //   success: 'Спасибо! Мы свяжемся с вами в ближайшее время.',
+  //   failure: 'Что-то пошло не так...',
+  // };
+
+  // forms.forEach((form) => postData(form));
+
+  // function postData(form) {
+  //   form.addEventListener('submit', (e) => {
+  //     e.preventDefault();
+  //     const request = new XMLHttpRequest();
+  //     request.open('POST', 'server.php');
+
+  //     const msg = document.createElement('div');
+  //     msg.classList.add('status');
+  //     msg.textContent = message.loading;
+  //     e.target.append(msg);
+
+  //     const obj = {};
+  //     new FormData(e.target).forEach((value, key) => (obj[key] = value));
+  //     const json = JSON.stringify(obj);
+
+  //     request.send(json);
+
+  //     request.addEventListener('load', () => {
+  //       if (request.status === 200) {
+  //         console.log(request.response);
+  //         msg.textContent = message.success;
+  //         form.reset();
+  //         setTimeout(() => msg.remove(), 2000);
+  //         setTimeout(() => closeModal(), 2000);
+  //       } else {
+  //         msg.textContent = message.failure;
+  //       }
+  //     });
+  //   });
+  // }
+
   const forms = document.querySelectorAll('form');
+
   const message = {
     loading: 'Загрузка...',
-    success: 'Спасибо! Мы свяжемся с вами в ближайшее время.',
+    success: 'Спасибо! Мы скоро свяжемся с вами!',
     failure: 'Что-то пошло не так...',
   };
 
@@ -223,29 +264,33 @@ window.addEventListener('DOMContentLoaded', () => {
   function postData(form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+
+      const statusMsg = document.createElement('div');
+      statusMsg.classList.add('status');
+      statusMsg.textContent = message.loading;
+      e.target.append(statusMsg);
+
+      const formData = new FormData(e.target);
+      const obj = {};
+      formData.forEach((value, key) => (obj[key] = value));
+
       const request = new XMLHttpRequest();
       request.open('POST', 'server.php');
 
-      const msg = document.createElement('div');
-      msg.classList.add('status');
-      msg.textContent = message.loading;
-      e.target.append(msg);
-
-      const obj = {};
-      new FormData(e.target).forEach((value, key) => (obj[key] = value));
       const json = JSON.stringify(obj);
-
       request.send(json);
 
       request.addEventListener('load', () => {
         if (request.status === 200) {
+          statusMsg.textContent = message.success;
           console.log(request.response);
-          msg.textContent = message.success;
-          form.reset();
-          setTimeout(() => msg.remove(), 2000);
-          setTimeout(() => closeModal(), 2000);
+          e.target.reset();
+          setTimeout(() => {
+            statusMsg.remove();
+            closeModal();
+          }, 2000);
         } else {
-          msg.textContent = message.failure;
+          statusMsg.textContent = message.failure;
         }
       });
     });

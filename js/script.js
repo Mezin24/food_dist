@@ -238,22 +238,38 @@ window.addEventListener('DOMContentLoaded', () => {
       const obj = {};
       formData.forEach((value, key) => (obj[key] = value));
 
-      const request = new XMLHttpRequest();
-      request.open('POST', 'server.php');
-
-      const json = JSON.stringify(obj);
-      request.send(json);
-
-      request.addEventListener('load', () => {
-        if (request.status === 200) {
+      fetch('server.php', {
+        method: 'POST',
+        body: JSON.stringify(obj),
+        headers: {
+          'Content-type': 'application/json',
+        },
+      })
+        .then((data) => data.text())
+        .then((request) => {
           showThanksMessage(message.success);
-          console.log(request.response);
-          e.target.reset();
+          console.log(request);
+
           statusMsg.remove();
-        } else {
-          showThanksMessage(message.failure);
-        }
-      });
+        })
+        .catch(() => showThanksMessage(message.failure))
+        .finally(() => e.target.reset());
+
+      // const request = new XMLHttpRequest();
+      // request.open('POST', 'server.php');
+      // const json = JSON.stringify(obj);
+      // request.send(json);
+
+      // request.addEventListener('load', () => {
+      //   if (request.status === 200) {
+      //     showThanksMessage(message.success);
+      //     console.log(request.response);
+      //     e.target.reset();
+      //     statusMsg.remove();
+      //   } else {
+      //     showThanksMessage(message.failure);
+      //   }
+      // });
     });
   }
 

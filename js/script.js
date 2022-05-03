@@ -330,7 +330,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function displaySlideNumber(num = 0) {
+  function displaySlide(num = 0) {
     hideSlides();
     currentLabel.textContent = addZero(num + 1);
     totalLabel.textContent = addZero(slides.length);
@@ -342,15 +342,15 @@ window.addEventListener('DOMContentLoaded', () => {
     if (current === 0) return;
 
     current--;
-    displaySlideNumber(current);
+    displaySlide(current);
   });
 
   nextBtn.addEventListener('click', () => {
     if (current >= slides.length - 1) return;
 
     current++;
-    displaySlideNumber(current);
+    displaySlide(current);
   });
 
-  displaySlideNumber();
+  displaySlide();
 });

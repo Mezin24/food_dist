@@ -298,4 +298,19 @@ window.addEventListener('DOMContentLoaded', () => {
       closeModal();
     }, 4000);
   }
+
+  ///////// RECURSION ///////////////////////
+  // const body = document.querySelector('body');
+  // const recursion = (element) => {
+  //   element.childNodes.forEach((node) => {
+  //     if (node.nodeName === '#text' || node.nodeName === '#comment') {
+  //       return;
+  //     } else {
+  //       console.log(node);
+  //       recursion(node);
+  //     }
+  //   });
+  // };
+
+  // recursion(body);
 });

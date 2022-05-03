@@ -152,51 +152,41 @@ window.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', openModalByScroll);
 
   ///////// CARDS CLASSES ///////////////////////
-  const data = [
-    {
-      img: 'vegy',
-      menu: '"Фитнес"',
-      descr:
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих      овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-      price: 229,
-      parentSelector: '.menu__field > .container',
-    },
-    {
-      img: 'elite',
-      menu: '“Премиум”',
-      descr:
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода        в ресторан!',
-      price: 550,
-      parentSelector: '.menu__field > .container',
-    },
-    {
-      img: 'post',
-      menu: '"Постное"',
-      descr:
-        '>Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие        продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное        количество белков за счет тофу и импортных вегетарианских стейков.',
-      price: 430,
-      parentSelector: '.menu__field > .container',
-    },
-  ];
+
+  const getData = async (url) => {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Could not fetch url ${url}, status ${res.status}`);
+    }
+
+    return await res.json();
+  };
+
   class Card {
-    constructor({ img, menu, descr, price, parentSelector }) {
+    constructor(img, altimg, title, descr, price, parent) {
       this.img = img;
-      this.menu = menu;
+      this.altimg = altimg;
+      this.title = title;
       this.descr = descr;
       this.price = price;
-      this.parent = document.querySelector(parentSelector);
+      this.parent = document.querySelector(parent);
+    }
+
+    calcPrice() {
+      return this.price * 72;
     }
 
     render() {
       const html = `
       <div class="menu__item ">
-        <img src="img/tabs/${this.img}.jpg" alt="${this.img}">
-        <h3 class="menu__item-subtitle">Меню ${this.menu}</h3>
+        <img src="${this.img}" alt="${this.img}">
+        <h3 class="menu__item-subtitle">Меню ${this.title}</h3>
         <div class="menu__item-descr">${this.descr}</div>
         <div class="menu__item-divider"></div>
         <div class="menu__item-price">
             <div class="menu__item-cost">Цена:</div>
-            <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+            <div class="menu__item-total"><span>${this.calcPrice()}</span> грн/день</div>
         </div>
       </div>
       `;
@@ -205,8 +195,17 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  data.forEach((item) => {
-    new Card(item).render();
+  getData('http://localhost:3000/menu').then((menu) => {
+    menu.forEach(({ img, altimg, title, descr, price }) => {
+      new Card(
+        img,
+        altimg,
+        title,
+        descr,
+        price,
+        '.menu__field > .container'
+      ).render();
+    });
   });
 
   ///////// FORMS ///////////////////////

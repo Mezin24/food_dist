@@ -219,9 +219,21 @@ window.addEventListener('DOMContentLoaded', () => {
     failure: 'Что-то пошло не так...',
   };
 
-  forms.forEach((form) => postData(form));
+  const postData = async (url, data) => {
+    const res = await fetch(url, {
+      method: 'POST',
+      body: data,
+      headers: {
+        'Content-type': 'application/json',
+      },
+    });
 
-  function postData(form) {
+    return await res.json();
+  };
+
+  forms.forEach((form) => bindPostData(form));
+
+  function bindPostData(form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -235,17 +247,9 @@ window.addEventListener('DOMContentLoaded', () => {
       e.target.insertAdjacentElement('afterend', statusMsg);
 
       const formData = new FormData(e.target);
-      const obj = {};
-      formData.forEach((value, key) => (obj[key] = value));
+      const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-      fetch('server.php', {
-        method: 'POST',
-        body: JSON.stringify(obj),
-        headers: {
-          'Content-type': 'application/json',
-        },
-      })
-        .then((data) => data.text())
+      postData('http://localhost:3000/requests', json)
         .then((request) => {
           showThanksMessage(message.success);
           console.log(request);
@@ -295,8 +299,4 @@ window.addEventListener('DOMContentLoaded', () => {
       closeModal();
     }, 4000);
   }
-
-  fetch('http://localhost:3000/menu')
-    .then((response) => response.json())
-    .then((data) => console.log(data));
 });

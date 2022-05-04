@@ -321,36 +321,82 @@ window.addEventListener('DOMContentLoaded', () => {
   const nextBtn = document.querySelector('.offer__slider-next');
   const currentLabel = document.getElementById('current');
   const totalLabel = document.getElementById('total');
-  let current = 0;
+  const slidesWrapper = document.querySelector('.offer__slider-wrapper');
+  const slidesField = document.querySelector('.offer__slider-inner');
+  const width = window.getComputedStyle(slidesWrapper).width;
+  let current = 1;
+  let offset = 0;
 
-  function hideSlides() {
-    slides.forEach((slide) => {
-      slide.classList.add('hide');
-      slide.classList.remove('show');
-    });
-  }
+  slidesField.style.width = 100 * slides.length + '%';
+  slidesField.style.display = 'flex';
+  slidesField.style.transition = 'all 0.5s';
+  slidesWrapper.style.overflow = 'hidden';
+  slides.forEach((slide) => (slide.style.width = width));
 
-  function displaySlide(num = 0) {
-    hideSlides();
-    currentLabel.textContent = addZero(num + 1);
-    totalLabel.textContent = addZero(slides.length);
-    slides[num].classList.remove('hide');
-    slides[num].classList.add('show');
-  }
-
-  prevBtn.addEventListener('click', () => {
-    if (current === 0) return;
-
-    current--;
-    displaySlide(current);
-  });
+  totalLabel.textContent = addZero(slides.length);
+  currentLabel.textContent = addZero(current);
 
   nextBtn.addEventListener('click', () => {
-    if (current >= slides.length - 1) return;
+    if (offset === parseFloat(width) * (slides.length - 1)) {
+      offset = 0;
+    } else {
+      offset += parseFloat(width);
+    }
+    slidesField.style.transform = `translateX(-${offset}px)`;
 
-    current++;
-    displaySlide(current);
+    if (current === slides.length) {
+      current = 1;
+    } else {
+      current++;
+    }
+    currentLabel.textContent = addZero(current);
   });
 
-  displaySlide();
+  prevBtn.addEventListener('click', () => {
+    if (offset === 0) {
+      offset = parseFloat(width) * (slides.length - 1);
+    } else {
+      offset -= parseFloat(width);
+    }
+    slidesField.style.transform = `translateX(-${offset}px)`;
+
+    if (current === 1) {
+      current = slides.length;
+    } else {
+      current--;
+    }
+    currentLabel.textContent = addZero(current);
+  });
+
+  ///////// simpl version SLIDER ///////////////////////
+  // function hideSlides() {
+  //   slides.forEach((slide) => {
+  //     slide.classList.add('hide');
+  //     slide.classList.remove('show');
+  //   });
+  // }
+
+  // function displaySlide(num = 0) {
+  //   hideSlides();
+  //   currentLabel.textContent = addZero(num + 1);
+  //   totalLabel.textContent = addZero(slides.length);
+  //   slides[num].classList.remove('hide');
+  //   slides[num].classList.add('show');
+  // }
+
+  // prevBtn.addEventListener('click', () => {
+  //   if (current === 0) return;
+
+  //   current--;
+  //   displaySlide(current);
+  // });
+
+  // nextBtn.addEventListener('click', () => {
+  //   if (current >= slides.length - 1) return;
+
+  //   current++;
+  //   displaySlide(current);
+  // });
+
+  // displaySlide();
 });

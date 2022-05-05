@@ -438,4 +438,81 @@ window.addEventListener('DOMContentLoaded', () => {
   // });
 
   // displaySlide();
+
+  ///////// CALCULATOR ///////////////////////
+
+  const calcEl = document.querySelector('.calculating__result span');
+  let sex = 'female',
+    weight,
+    height,
+    age,
+    ratio = 1.375;
+
+  calcCalories();
+
+  getDynamicData('.calculating__choose_medium');
+  getStaticData('#gender', 'calculating__choose-item_active');
+  getStaticData('.calculating__choose_big', 'calculating__choose-item_active');
+
+  function getStaticData(selector, activClass) {
+    const elements = document.querySelectorAll(`${selector} > *`);
+
+    elements.forEach((el) =>
+      el.addEventListener('click', (e) => {
+        if (document.querySelector(selector).getAttribute('id') === 'gender') {
+          sex = e.target.getAttribute('id');
+        } else {
+          ratio = +e.target.dataset.ratio;
+        }
+
+        elements.forEach((el) => el.classList.remove(activClass));
+        e.target.classList.add(activClass);
+        calcCalories();
+      })
+    );
+  }
+
+  function getDynamicData(selector) {
+    const elements = document.querySelectorAll(`${selector} > input`);
+
+    elements.forEach((el) =>
+      el.addEventListener('input', (e) => {
+        const id = e.target.getAttribute('id');
+        if (isNaN(+e.target.value)) {
+          return;
+        }
+
+        switch (id) {
+          case 'age':
+            age = +e.target.value;
+            break;
+          case 'height':
+            height = +e.target.value;
+            break;
+          case 'weight':
+            weight = +e.target.value;
+            break;
+        }
+
+        calcCalories();
+      })
+    );
+  }
+  console.log(calcEl);
+  function calcCalories() {
+    if (!sex || !weight || !height || !age || !ratio) {
+      calcEl.textContent = '_____';
+      return;
+    }
+
+    if (sex === 'female') {
+      calcEl.textContent = Math.round(
+        (447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio
+      );
+    } else {
+      calcEl.textContent = Math.round(
+        (88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio
+      );
+    }
+  }
 });

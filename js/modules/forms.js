@@ -1,22 +1,13 @@
-function form() {
-  const forms = document.querySelectorAll('form');
+import { openModal, closeModal } from './modal';
+import { postData } from '../services/services';
+
+function form(formSelector, modalTimerId) {
+  const forms = document.querySelectorAll(formSelector);
 
   const message = {
     loading: 'img/form/spinner.svg',
     success: 'Спасибо! Мы скоро свяжемся с вами!',
     failure: 'Что-то пошло не так...',
-  };
-
-  const postData = async (url, data) => {
-    const res = await fetch(url, {
-      method: 'POST',
-      body: data,
-      headers: {
-        'Content-type': 'application/json',
-      },
-    });
-
-    return await res.json();
   };
 
   forms.forEach((form) => bindPostData(form));
@@ -46,22 +37,6 @@ function form() {
         })
         .catch(() => showThanksMessage(message.failure))
         .finally(() => e.target.reset());
-
-      // const request = new XMLHttpRequest();
-      // request.open('POST', 'server.php');
-      // const json = JSON.stringify(obj);
-      // request.send(json);
-
-      // request.addEventListener('load', () => {
-      //   if (request.status === 200) {
-      //     showThanksMessage(message.success);
-      //     console.log(request.response);
-      //     e.target.reset();
-      //     statusMsg.remove();
-      //   } else {
-      //     showThanksMessage(message.failure);
-      //   }
-      // });
     });
   }
 
@@ -69,7 +44,7 @@ function form() {
     const modalDialoge = document.querySelector('.modal__dialog');
     modalDialoge.classList.add('hide');
 
-    openModal();
+    openModal('.modal', modalTimerId);
     const thanksDialoge = document.createElement('div');
     thanksDialoge.classList.add('modal__dialog');
     thanksDialoge.innerHTML = `
@@ -79,14 +54,14 @@ function form() {
       </div>
     `;
 
-    modal.append(thanksDialoge);
+    document.querySelector('.modal').append(thanksDialoge);
     setTimeout(() => {
       thanksDialoge.remove();
       modalDialoge.classList.add('show');
       modalDialoge.classList.remove('hide');
-      closeModal();
+      closeModal('.modal');
     }, 4000);
   }
 }
 
-module.exports = form;
+export default form;

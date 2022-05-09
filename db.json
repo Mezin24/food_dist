@@ -22,11 +22,5 @@
       "price": 21
     }
   ],
-  "requests": [
-    {
-      "name": "Test",
-      "phone": "232 231 4342",
-      "id": 1
-    }
-  ]
+  "requests": []
 }

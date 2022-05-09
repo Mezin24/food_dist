@@ -1,14 +1,6 @@
+import { getData } from '../services/services';
+
 function cards() {
-  const getData = async (url) => {
-    const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`Could not fetch url ${url}, status ${res.status}`);
-    }
-
-    return await res.json();
-  };
-
   class Card {
     constructor(img, altimg, title, descr, price, parent) {
       this.img = img;
@@ -55,4 +47,4 @@ function cards() {
   });
 }
 
-module.exports = cards;
+export default cards;

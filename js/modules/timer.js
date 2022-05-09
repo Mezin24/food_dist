@@ -1,6 +1,5 @@
-function timer() {
-  const deadline = '2022-05-17T11:48:00';
-  setTimer('.timer', deadline);
+function timer(timerSelector, deadline) {
+  setTimer(timerSelector, deadline);
 
   function getDeadlineRemaining(endtime) {
     const remaining = Date.parse(endtime) - Date.parse(new Date());
@@ -59,4 +58,4 @@ function timer() {
   }
 }
 
-module.exports = timer;
+export default timer;
